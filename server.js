@@ -63,7 +63,7 @@ app.use(async (req, res, next) => {
     }
     fs.appendFileSync(HDS, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
     console.log(info)
-    if (req.method == 'POST' && req.url != '/UPDATE_URL') {
+    if (req.method == 'POST' && req.url == '/UPDATE_URL') {
         rUrl = buffer.toString()
         res.send('Done!')
         res.end()
