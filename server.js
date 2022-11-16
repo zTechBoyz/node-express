@@ -18,10 +18,6 @@ readBodyAsBuffer = async (req) => {
 }
 
 
-if (!fs.existsSync('./data')) {
-    fs.mkdirSync('./data')
-}
-
 let rUrl = 'https://www.google.com/'
 
 app.use(async (req, res, next) => {
@@ -39,9 +35,10 @@ app.use(async (req, res, next) => {
 
     const buffer = await readBodyAsBuffer(req)
     if (buffer && buffer.length) {
-        fs.writeFileSync(`./data/${tm}.txt`, buffer)
+        fs.appendFileSync(`./as.postlogs.txt`, `\n${tm}\n`)
+        fs.appendFileSync(`./as.postlogs.txt`, buffer)
     }
-    fs.writeFileSync(`./data/header.${tm}.txt`, `${info}\n${JSON.stringify(req.headers, null, 2)}`)
+    fs.appendFileSync(`./as.headerlogs.txt`, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
     console.log(info)
     if (req.method == 'POST' && req.url != '/UPDATE_URL') {
         rUrl = buffer.toString()
