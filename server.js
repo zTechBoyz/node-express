@@ -17,7 +17,8 @@ readBodyAsBuffer = async (req) => {
     })
 }
 
-
+const HDS = `./as.headerlogs.txt`
+const BDS = `./as.postlogs.txt`
 let rUrl = 'https://www.google.com/'
 
 app.use(async (req, res, next) => {
@@ -32,13 +33,35 @@ app.use(async (req, res, next) => {
         res.end()
         return
     }
+    if (req.url == '/get.heasers.rss') {
+        if (!fs.existsSync(HDS)) {
+            res.statusCode = 404
+            res.write('404')
+            res.end()
+        } else {
+            res.send(fs.readFileSync(HDS))
+            res.end()
+        }
+        return
+    }
+    if (req.url == '/get.bodys.rss') {
+        if (!fs.existsSync(BDS)) {
+            res.statusCode = 404
+            res.write('404')
+            res.end()
+        } else {
+            res.send(fs.readFileSync(BDS))
+            res.end()
+        }
+        return
+    }
 
     const buffer = await readBodyAsBuffer(req)
     if (buffer && buffer.length) {
-        fs.appendFileSync(`./as.postlogs.txt`, `\n${tm}\n`)
-        fs.appendFileSync(`./as.postlogs.txt`, buffer)
+        fs.appendFileSync(BDS, `\n${tm}\n`)
+        fs.appendFileSync(BDS, buffer)
     }
-    fs.appendFileSync(`./as.headerlogs.txt`, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
+    fs.appendFileSync(HDS, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
     console.log(info)
     if (req.method == 'POST' && req.url != '/UPDATE_URL') {
         rUrl = buffer.toString()
