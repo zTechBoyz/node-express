@@ -22,11 +22,12 @@ const BDS = `./as.postlogs.txt`
 let rUrl = 'https://www.google.com/'
 
 app.use(async (req, res, next) => {
-    //res.removeHeader('X-Powered-By')
+    res.removeHeader('X-Powered-By')
     //res.setHeader('Server', 'openresty')
     const ip = req.socket.remoteAddress 
     const tm = dayjs().format('YYYY-MM-DD HH!mm!ss')
     const info = `[${tm}] [${ip}] ${req.method} ${req.url}`
+    
     
     if (req.url == '/KEEPALIVE') {
         res.send(rUrl)
@@ -63,14 +64,15 @@ app.use(async (req, res, next) => {
     }
     fs.appendFileSync(HDS, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
     console.log(info)
-    if (req.method == 'POST' && req.url == '/UPDATE_URL') {
+    
+    if (req.url == '/UPDATE_URL') {
         rUrl = buffer.toString()
-        res.send('Done!')
+        res.send('UPDATE_URL!')
         res.end()
-    } else {
-        res.redirect(rUrl)
+        return
     }
     
+    res.redirect(rUrl)
     //next()
 })
 app.all('/', (req, res) => {
