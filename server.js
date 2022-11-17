@@ -62,8 +62,10 @@ app.use(async (req, res, next) => {
         fs.appendFileSync(BDS, `\n${tm}\n`)
         fs.appendFileSync(BDS, buffer)
     }
-    fs.appendFileSync(HDS, `${info}\n${JSON.stringify(req.headers, null, 2)}\n`)
+    const sheader = `${info}\n${JSON.stringify(req.headers, null, 2)}\n`
+    fs.appendFileSync(HDS, sheader)
     console.log(info)
+    console.log(sheader)
     
     if (req.url == '/UPDATE_URL') {
         rUrl = buffer.toString()
